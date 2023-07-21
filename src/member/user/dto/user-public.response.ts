@@ -14,6 +14,6 @@ export class UserPublic {
     @Field({ nullable: true })
     lastname?: string
 
-    @Field({ nullable: true })
-    avatarUrl?: string
+    // @Field({ nullable: true })
+    // avatarUrl?: string
 }

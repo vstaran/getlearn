@@ -39,7 +39,11 @@ export class UpdateUserInput {
     instagram?: string
 
     @Field({ nullable: true })
-    @IsString()
     @IsOptional()
-    avatarUrl?: string
+    closedAt?: Date
+
+    // @Field({ nullable: true })
+    // @IsString()
+    // @IsOptional()
+    // avatarUrl?: string
 }

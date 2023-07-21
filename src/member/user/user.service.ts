@@ -15,11 +15,6 @@ export class UserService {
     async getUserById(id: number): Promise<User> {
         return await this.prisma.user.findUnique({
             where: { id: id },
-            include: {
-                address: true,
-                payments: true,
-                referrals: true,
-            },
         })
     }
 
@@ -27,20 +22,20 @@ export class UserService {
         return await this.prisma.user.findUnique({ where: { email: email } })
     }
 
-    async getUsers(params: {
-        skip?: number
-        take?: number
-        cursor?: Prisma.UserWhereUniqueInput
-        where?: Prisma.UserWhereInput
-        orderBy?: Prisma.UserOrderByWithRelationInput
-    }): Promise<User[]> {
-        const { skip, take, cursor, where, orderBy } = params
-        return await this.prisma.user.findMany({
-            skip,
-            take,
-            cursor,
+    async getUsers(where: any, orderBy: any, skip: number, take: number): Promise<User[]> {
+        const users = await this.prisma.user.findMany({
             where,
             orderBy,
+            skip: skip || 0,
+            take: take || 10,
+        })
+
+        return users
+    }
+
+    async getTotalCount(where: any): Promise<number> {
+        return this.prisma.user.count({
+            where,
         })
     }
 

@@ -5,7 +5,6 @@ import * as bcrypt from 'bcrypt'
 import { PrismaService } from '../database/prisma.service'
 import { MailService } from '../mail/mail.service'
 import { UserService } from '../member/user/user.service'
-import { RoomService } from './../chat/room/room.service'
 import { ChangePasswordDto } from './dto/change-password.dto'
 import { ForgotPasswordDto } from './dto/forgot-password'
 import { LogoutResponse } from './dto/logout.response'
@@ -21,11 +20,10 @@ export class AuthService {
         private configService: ConfigService,
         private userService: UserService,
         private mailService: MailService,
-        private roomService: RoomService,
     ) {}
 
     async signup(signUpInput: SignUpInput) {
-        const { username, email } = signUpInput
+        const { username, email, closedAt } = signUpInput
         const hashedPassword = await bcrypt.hash(signUpInput.password, 10)
 
         const user = await this.prisma.user.create({
@@ -33,11 +31,9 @@ export class AuthService {
                 username: username,
                 email: email,
                 hashedPassword,
+                closedAt: closedAt,
             },
         })
-
-        const referalRoomId = await this.roomService.createReferRoom(user.id)
-        await this.prisma.user.update({ where: { id: user.id }, data: { referalRoomId: referalRoomId } })
 
         const { accessToken, refreshToken } = await this.createTokens(user.id, user.email, user.role)
         await this.updateRefreshToken(user.id, refreshToken)
@@ -159,9 +155,5 @@ export class AuthService {
             message: 'Password reset success',
             success: true,
         }
-    }
-
-    async addUserInRefererRoom(roomId: number, userId: number) {
-        await this.roomService.addUserInRefererRoom(roomId, userId)
     }
 }
