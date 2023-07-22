@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker'
 import { PrismaClient } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 
@@ -10,7 +9,7 @@ export async function seedUsers() {
         await prisma.user.create({
             data: {
                 username: 'Banana',
-                email: faker.internet.email(),
+                email: 'banana@gmail.com',
                 role: 'ADMIN',
                 hashedPassword: password,
                 closedAt: '2025-10-11T00:00:00.000Z',
