@@ -35,11 +35,14 @@ export class User {
     @Field({ nullable: true })
     confirmationCode?: string
 
-    @Field({ nullable: true })
-    avatarUrl?: string
+    // @Field({ nullable: true })
+    // avatarUrl?: string
 
     //@Field(() => UserRole)
     //role: ROLE
+
+    @Field({ nullable: true })
+    closedAt?: Date
 
     @Field()
     createdAt: Date

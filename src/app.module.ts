@@ -10,16 +10,10 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
 import { AccessTokenGuard, RolesGuard } from './auth/guards'
-import { ChatModule } from './chat/chat.module'
 import { PrismaService } from './database/prisma.service'
 import { MailModule } from './mail/mail.module'
 import { MailService } from './mail/mail.service'
 import { MemberModule } from './member/member.module'
-import { NewsModule } from './news/news.module'
-import { NewsService } from './news/news.service'
-import { NotificationModule } from './notification/notification.module'
-import { TokenModule } from './token/token.module'
-import { TradeModule } from './trade/trade.module'
 
 @Module({
     imports: [
@@ -37,12 +31,7 @@ import { TradeModule } from './trade/trade.module'
         }),
         EventEmitterModule.forRoot(),
         AuthModule,
-        NewsModule,
         MailModule,
-        ChatModule,
-        TokenModule,
-        TradeModule,
-        NotificationModule,
     ],
     controllers: [AppController],
     providers: [
@@ -50,7 +39,6 @@ import { TradeModule } from './trade/trade.module'
         PrismaService,
         { provide: APP_GUARD, useClass: AccessTokenGuard },
         { provide: APP_GUARD, useClass: RolesGuard },
-        NewsService,
         MailService,
     ],
 })

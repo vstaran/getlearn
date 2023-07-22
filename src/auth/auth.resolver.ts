@@ -1,6 +1,5 @@
 import { NotFoundException, UseGuards } from '@nestjs/common'
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql'
-import { ReferralService } from '../member/referral/referral.service'
 import { UserService } from '../member/user/user.service'
 import { AuthService } from './auth.service'
 import { Roles } from './decorators'
@@ -18,42 +17,18 @@ import { RefreshTokenGuard } from './guards'
 
 @Resolver()
 export class AuthResolver {
-    constructor(
-        private readonly authService: AuthService,
-        private readonly userService: UserService,
-        private readonly referralService: ReferralService,
-    ) {}
+    constructor(private readonly authService: AuthService, private readonly userService: UserService) {}
 
     @Public()
     @Mutation(() => SignResponse)
     async signup(@Args('signUpInput') signUpInput: SignUpInput) {
-        const { email, referrerUserId } = signUpInput
+        const { email } = signUpInput
         const existingUser = await this.userService.getUserByEmail(email)
         if (existingUser) {
             throw new NotFoundException('User with this email already exists.')
         }
 
         const signup = await this.authService.signup(signUpInput)
-
-        if (referrerUserId) {
-            // check exist Referrer User
-            const existingReferrerUser = await this.userService.getUserById(referrerUserId)
-            if (existingReferrerUser) {
-                await this.authService.addUserInRefererRoom(existingReferrerUser.referalRoomId, signup.user.id)
-                const {
-                    user: { id: referralUserId },
-                } = signup
-
-                const referallUser = await this.referralService.create({
-                    userReferrer: { connect: { id: referrerUserId } },
-                    userReferral: { connect: { id: referralUserId } },
-                })
-                if (referallUser) {
-                    // TODO - add token to user
-                    // TODO - add token to referral-user
-                }
-            }
-        }
 
         return signup
     }
