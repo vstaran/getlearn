@@ -23,7 +23,9 @@ COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 
-RUN npx prisma migrate deploy
+#RUN npx prisma migrate deploy
+RUN npx prisma generate
+RUN npx prisma db push
 
 EXPOSE 3000
 CMD [ "npm", "run", "start:prod" ]
