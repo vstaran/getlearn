@@ -9,11 +9,11 @@ export async function seedUsers() {
         const password = await bcrypt.hash('qq11ww22ee', 10)
         await prisma.user.create({
             data: {
-                username: faker.internet.userName(),
+                username: 'Banana',
                 email: faker.internet.email(),
                 role: 'ADMIN',
                 hashedPassword: password,
-                closedAt: '',
+                closedAt: '2025-10-11T00:00:00.000Z',
             },
         })
     }
