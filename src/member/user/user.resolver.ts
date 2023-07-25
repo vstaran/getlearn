@@ -1,9 +1,9 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { GetCurrentUserId, Roles } from '../../auth/decorators'
+import { ItemUsers } from './dto/item-users.response'
 import { UpdateUserInput } from './dto/update-user.input'
 import { User } from './entities/user.entity'
 import { UserService } from './user.service'
-import { ItemUsers } from './dto/item-users.response'
 
 @Resolver(() => User)
 export class UserResolver {
@@ -48,6 +48,15 @@ export class UserResolver {
             throw new Error('User not found')
         }
         return await this.userService.updateUser({ where: { id: userId }, data: updateUserInput })
+    }
+
+    @Roles('ADMIN')
+    @Mutation(() => User)
+    async deleteUserProfile(@GetCurrentUserId() currentUserId: number, userId: number) {
+        if (currentUserId === userId) {
+            throw new Error('You can`t delete your self')
+        }
+        return await this.userService.deleteUser({ id: userId })
     }
 
     @Roles('ADMIN')
