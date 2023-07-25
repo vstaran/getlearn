@@ -1,9 +1,9 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { GetCurrentUserId, Roles } from '../../auth/decorators'
+import { ItemUsers } from './dto/item-users.response'
 import { UpdateUserInput } from './dto/update-user.input'
 import { User } from './entities/user.entity'
 import { UserService } from './user.service'
-import { ItemUsers } from './dto/item-users.response'
 
 @Resolver(() => User)
 export class UserResolver {
@@ -51,13 +51,22 @@ export class UserResolver {
     }
 
     @Roles('ADMIN')
+    @Mutation(() => User)
+    async deleteUserProfile(@GetCurrentUserId() currentUserId: number, userId: number) {
+        if (currentUserId === userId) {
+            throw new Error('You can`t delete your self')
+        }
+        return await this.userService.deleteUser({ id: userId })
+    }
+
+    @Roles('ADMIN')
     @Query(() => ItemUsers)
     async getAllUsers(
         @Args('search', { nullable: true }) search: string,
         @Args('sortBy', { nullable: true }) sortBy: string,
         @Args('sortOrder', { nullable: true, defaultValue: 'asc' }) sortOrder: 'asc' | 'desc',
         @Args('skip', { nullable: true, type: () => Int, defaultValue: 0 }) skip: number,
-        @Args('take', { nullable: true, type: () => Int, defaultValue: 10 }) take: number,
+        @Args('take', { nullable: true, type: () => Int, defaultValue: 0 }) take: number,
     ) {
         const where = search ? { OR: [{ title: { contains: search } }, { description: { contains: search } }] } : {}
 

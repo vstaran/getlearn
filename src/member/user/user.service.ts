@@ -1,10 +1,29 @@
 import { Injectable } from '@nestjs/common'
+import { Cron } from '@nestjs/schedule'
 import { Prisma, User } from '@prisma/client'
 import { PrismaService } from '../../database/prisma.service'
 
 @Injectable()
 export class UserService {
     constructor(private prisma: PrismaService) {}
+
+    @Cron('0 0 * * *')
+    async handleCron() {
+        return await this.deleteOldUsers()
+    }
+
+    async deleteOldUsers(): Promise<void> {
+        const currentDate = new Date()
+        currentDate.setDate(currentDate.getDate() - 30) // Subtract 30 days
+
+        await this.prisma.user.deleteMany({
+            where: {
+                createdAt: {
+                    lt: currentDate,
+                },
+            },
+        })
+    }
 
     async getUser(userWhereUniqueInput: Prisma.UserWhereUniqueInput): Promise<User | null> {
         return await this.prisma.user.findUnique({
@@ -23,12 +42,19 @@ export class UserService {
     }
 
     async getUsers(where: any, orderBy: any, skip: number, take: number): Promise<User[]> {
-        const users = await this.prisma.user.findMany({
-            where,
-            orderBy,
-            skip: skip || 0,
-            take: take || 10,
-        })
+        let findMany
+        if (take === 0) {
+            findMany = { where, orderBy }
+        } else {
+            findMany = {
+                where,
+                orderBy,
+                skip: skip || 0,
+                take: take || 10,
+            }
+        }
+
+        const users = await this.prisma.user.findMany(findMany)
 
         return users
     }

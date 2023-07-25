@@ -26,8 +26,8 @@ export class SignUpInput {
     @Field()
     password: string
 
-    @IsNotEmpty()
-    @IsDate()
-    @Field()
-    closedAt: Date
+    //@IsNotEmpty()
+    //@IsDate()
+    //@Field()
+    //closedAt: Date
 }

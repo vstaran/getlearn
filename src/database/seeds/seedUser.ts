@@ -1,18 +1,32 @@
+import { faker } from '@faker-js/faker'
 import { PrismaClient } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 
 const prisma = new PrismaClient()
 
 export async function seedUsers() {
-    for (let i = 0; i < 1; i++) {
-        const password = await bcrypt.hash('qq11ww22ee', 10)
+    const password = await bcrypt.hash('qq11ww22ee', 10)
+    await prisma.user.upsert({
+        where: { email: 'banana@gmail.com' },
+        create: {
+            username: 'Banana',
+            email: 'banana@gmail.com',
+            role: 'ADMIN',
+            hashedPassword: password,
+        },
+        update: {
+            username: 'Banana', // Optionally, you can update other fields here if needed.
+            role: 'ADMIN',
+            hashedPassword: password,
+        },
+    })
+
+    for (let i = 0; i < 30; i++) {
         await prisma.user.create({
             data: {
-                username: 'Banana',
-                email: 'banana@gmail.com',
-                role: 'ADMIN',
+                username: faker.internet.userName(),
+                email: faker.internet.email(),
                 hashedPassword: password,
-                closedAt: '2025-10-11T00:00:00.000Z',
             },
         })
     }

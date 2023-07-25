@@ -23,7 +23,7 @@ export class AuthService {
     ) {}
 
     async signup(signUpInput: SignUpInput) {
-        const { username, email, closedAt } = signUpInput
+        const { username, email } = signUpInput
         const hashedPassword = await bcrypt.hash(signUpInput.password, 10)
 
         const user = await this.prisma.user.create({
@@ -31,7 +31,7 @@ export class AuthService {
                 username: username,
                 email: email,
                 hashedPassword,
-                closedAt: closedAt,
+                //closedAt: closedAt,
             },
         })
 
