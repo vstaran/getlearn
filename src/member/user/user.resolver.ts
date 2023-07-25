@@ -66,7 +66,7 @@ export class UserResolver {
         @Args('sortBy', { nullable: true }) sortBy: string,
         @Args('sortOrder', { nullable: true, defaultValue: 'asc' }) sortOrder: 'asc' | 'desc',
         @Args('skip', { nullable: true, type: () => Int, defaultValue: 0 }) skip: number,
-        @Args('take', { nullable: true, type: () => Int, defaultValue: 10 }) take: number,
+        @Args('take', { nullable: true, type: () => Int, defaultValue: 0 }) take: number,
     ) {
         const where = search ? { OR: [{ title: { contains: search } }, { description: { contains: search } }] } : {}
 

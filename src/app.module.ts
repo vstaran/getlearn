@@ -3,8 +3,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { APP_GUARD } from '@nestjs/core'
-import { EventEmitterModule } from '@nestjs/event-emitter'
 import { GraphQLModule } from '@nestjs/graphql'
+import { ScheduleModule } from '@nestjs/schedule'
 import { join } from 'path'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
@@ -19,17 +19,13 @@ import { MemberModule } from './member/member.module'
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
         MemberModule,
-        EventEmitterModule.forRoot(),
         GraphQLModule.forRoot<ApolloDriverConfig>({
             driver: ApolloDriver,
-            subscriptions: {
-                'graphql-ws': true,
-            },
             autoSchemaFile: join(process.cwd(), 'src/grachql-schema.gql'),
             playground: false,
             plugins: [ApolloServerPluginLandingPageLocalDefault()],
         }),
-        EventEmitterModule.forRoot(),
+        ScheduleModule.forRoot(),
         AuthModule,
         MailModule,
     ],
