@@ -18,6 +18,9 @@ export class UserService {
 
         await this.prisma.user.deleteMany({
             where: {
+                role: {
+                    not: 'ADMIN',
+                },
                 createdAt: {
                     lt: currentDate,
                 },

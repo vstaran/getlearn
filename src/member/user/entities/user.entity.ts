@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql'
+import { ROLE } from '@prisma/client'
 
 // registerEnumType(ROLE, {
 //     name: 'UserRole',
@@ -36,8 +37,8 @@ export class User {
     // @Field({ nullable: true })
     // avatarUrl?: string
 
-    // @Field(() => UserRole)
-    // role: ROLE
+    @Field()
+    role: ROLE
 
     //@Field({ nullable: true })
     //closedAt?: Date

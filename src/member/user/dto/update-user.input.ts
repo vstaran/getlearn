@@ -38,6 +38,10 @@ export class UpdateUserInput {
     @IsOptional()
     instagram?: string
 
+    @Field({ nullable: true })
+    @IsOptional()
+    createdAt?: Date
+
     //@Field({ nullable: true })
     //@IsOptional()
     //closedAt?: Date
