@@ -18,6 +18,7 @@ export class UserResolver {
         return user
     }
 
+    @Roles('ADMIN')
     @Mutation(() => User)
     async editMyProfile(
         @GetCurrentUserId() userId: number,
