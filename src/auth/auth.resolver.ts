@@ -19,7 +19,7 @@ import { RefreshTokenGuard } from './guards'
 export class AuthResolver {
     constructor(private readonly authService: AuthService, private readonly userService: UserService) {}
 
-    @Public()
+    @Roles('ADMIN')
     @Mutation(() => SignResponse)
     async signup(@Args('signUpInput') signUpInput: SignUpInput) {
         const { email } = signUpInput

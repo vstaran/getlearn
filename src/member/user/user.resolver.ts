@@ -32,7 +32,7 @@ export class UserResolver {
 
     @Roles('ADMIN')
     @Query(() => User)
-    async getUserProfile(userId: number) {
+    async getUserProfile(@Args('userId') userId: number) {
         const user = await this.userService.getUserById(userId)
         if (!user) {
             throw new Error('User not found')
@@ -42,7 +42,7 @@ export class UserResolver {
 
     @Roles('ADMIN')
     @Mutation(() => User)
-    async editUserProfile(userId: number, @Args('updateUserInput') updateUserInput: UpdateUserInput) {
+    async editUserProfile(@Args('userId') userId: number, @Args('updateUserInput') updateUserInput: UpdateUserInput) {
         const user = await this.userService.getUserById(userId)
         if (!user) {
             throw new Error('User not found')
@@ -52,7 +52,7 @@ export class UserResolver {
 
     @Roles('ADMIN')
     @Mutation(() => User)
-    async deleteUserProfile(@GetCurrentUserId() currentUserId: number, userId: number) {
+    async deleteUserProfile(@GetCurrentUserId() currentUserId: number, @Args('userId') userId: number) {
         if (currentUserId === userId) {
             throw new Error('You can`t delete your self')
         }
