@@ -68,11 +68,11 @@ export class AuthService {
     async signin(signInInput: SignInInput) {
         const user = await this.prisma.user.findUnique({ where: { email: signInInput.email } })
         if (!user) {
-            throw new ForbiddenException('Access Denied')
+            throw new ForbiddenException(`Аккаунт ${signInInput.email} не зарегистрирован`)
         }
         const doPasswordsMatch = await bcrypt.compare(signInInput.password, user.hashedPassword)
         if (!doPasswordsMatch) {
-            throw new ForbiddenException('Access Denied')
+            throw new ForbiddenException('Пароль не верный')
         }
         const { accessToken, refreshToken } = await this.createTokens(user.id, user.email, user.role)
 
