@@ -13,7 +13,7 @@ export class UserResolver {
     async getMyProfile(@GetCurrentUserId() userId: number): Promise<User> {
         const user = await this.userService.getUserById(userId)
         if (!user) {
-            throw new Error('User not found')
+            throw new Error('Пользователь не найден')
         }
         return user
     }
@@ -26,7 +26,7 @@ export class UserResolver {
     ): Promise<User> {
         const user = await this.userService.getUserById(userId)
         if (!user) {
-            throw new Error('User not found')
+            throw new Error('Пользователь не найден')
         }
         return await this.userService.updateUser({ where: { id: userId }, data: updateUserInput })
     }
@@ -36,7 +36,7 @@ export class UserResolver {
     async getUserProfile(@Args('userId') userId: number) {
         const user = await this.userService.getUserById(userId)
         if (!user) {
-            throw new Error('User not found')
+            throw new Error('Пользователь не найден')
         }
         return user
     }
@@ -46,7 +46,7 @@ export class UserResolver {
     async editUserProfile(@Args('userId') userId: number, @Args('updateUserInput') updateUserInput: UpdateUserInput) {
         const user = await this.userService.getUserById(userId)
         if (!user) {
-            throw new Error('User not found')
+            throw new Error('Пользователь не найден')
         }
         return await this.userService.updateUser({ where: { id: userId }, data: updateUserInput })
     }
@@ -55,7 +55,7 @@ export class UserResolver {
     @Mutation(() => User)
     async deleteUserProfile(@GetCurrentUserId() currentUserId: number, @Args('userId') userId: number) {
         if (currentUserId === userId) {
-            throw new Error('You can`t delete your self')
+            throw new Error('Вы не можете удалить себя')
         }
         return await this.userService.deleteUser({ id: userId })
     }
