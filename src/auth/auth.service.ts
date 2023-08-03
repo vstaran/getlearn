@@ -113,7 +113,7 @@ export class AuthService {
     async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
         const user = await this.userService.getUserByEmail(forgotPasswordDto.email)
         if (!user) {
-            throw new ForbiddenException('User not found')
+            throw new ForbiddenException('Пользователь не найден')
         }
 
         const confirmationCode = Math.floor(10000 + Math.random() * 900000).toString()
@@ -135,7 +135,7 @@ export class AuthService {
 
         const user = await this.userService.getUserByEmail(email)
         if (!user && user.confirmationCode !== confirmationCode) {
-            throw new ForbiddenException('User not found')
+            throw new ForbiddenException('Пользователь не найден')
         }
 
         const hashedPassword = await bcrypt.hash(password, 10)

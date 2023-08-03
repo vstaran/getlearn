@@ -25,7 +25,7 @@ export class AuthResolver {
         const { email } = signUpInput
         const existingUser = await this.userService.getUserByEmail(email)
         if (existingUser) {
-            throw new NotFoundException('User with this email already exists.')
+            throw new NotFoundException('Пользователь с таким адресом электронной почты уже существует.')
         }
 
         const signup = await this.authService.signup(signUpInput)
