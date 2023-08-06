@@ -32,6 +32,16 @@ export class UserResolver {
     }
 
     @Roles('ADMIN')
+    @Mutation(() => User)
+    async setAdminToUserId(@Args('userId') userId: number): Promise<User> {
+        const user = await this.userService.getUserById(userId)
+        if (!user) {
+            throw new Error('Пользователь не найден')
+        }
+        return await this.userService.updateUser({ where: { id: userId }, data: { role: 'ADMIN' } })
+    }
+
+    @Roles('ADMIN')
     @Query(() => User)
     async getUserProfile(@Args('userId') userId: number) {
         const user = await this.userService.getUserById(userId)
