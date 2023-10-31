@@ -7,10 +7,10 @@ import { PrismaService } from '../../database/prisma.service'
 export class UserService {
     constructor(private prisma: PrismaService) {}
 
-    @Cron('0 0 * * *')
-    async handleCron() {
-        return await this.deleteOldUsers()
-    }
+    //@Cron('0 0 * * *')
+    //async handleCron() {
+    //    return await this.deleteOldUsers()
+    //}
 
     async deleteOldUsers(): Promise<void> {
         const currentDate = new Date()
